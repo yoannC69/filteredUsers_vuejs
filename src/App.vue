@@ -22,6 +22,8 @@
     >
     Hommes</label>
 
+    <input type="text" v-model="search" placeholder="search users"/>
+
   <Users :usersFiltered="usersFiltered" />
   
         <table
@@ -39,7 +41,7 @@
       </thead>
       <tbody id="tbody-users" v-if="users">
         <tr
-          v-for="user in usersFiltered"
+          v-for="user in searchedUsers"
           :key="user.login.uuid"
         >
           <td><img :src="user.picture.thumbnail"></td>
@@ -67,13 +69,19 @@ export default {
   data(){
     return {
       users: [],
-      genderFilter: ['male','female']
+      genderFilter: ['male','female'],
+      search:''
     }
   },
 
   computed: {
     usersFiltered() {
       return this.users.filter((user) => this.genderFilter.includes(user.gender))
+    },
+    searchedUsers() {
+      return this.usersFiltered.filter((user) => {
+        return user.name.first.toLowerCase().match(this.search.toLowerCase());
+      });
     },
   },
 
