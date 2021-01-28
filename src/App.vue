@@ -1,16 +1,97 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <img
+    alt="Vue logo"
+    src="./assets/logo.png"
+  >
+  
+  <button @click="fetchUsers">
+    fetch users
+  </button>
+  <label>
+    <input
+      v-model="genderFilter"
+      type="checkbox"
+      value="female"
+    >
+    Femmes</label>
+  <label>
+    <input
+      v-model="genderFilter"
+      type="checkbox"
+      value="male"
+    >
+    Hommes</label>
+
+  <Users :usersFiltered="usersFiltered" />
+  
+        <table
+      id="tbl-users"
+      class="table table-hover"
+    >
+      <thead>
+        <tr>
+          <th>image</th>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Tel</th>
+          <th>Genre</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-users" v-if="users">
+        <tr
+          v-for="user in usersFiltered"
+          :key="user.login.uuid"
+        >
+          <td><img :src="user.picture.thumbnail"></td>
+          <td>{{ user.name.first }} {{ user.name.last }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.phone }}</td>
+          <td>{{ user.gender }}</td>
+          <td />
+        </tr>
+      </tbody>
+    </table>
+
+
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Users from './components/Users.vue'
+import axios from 'axios'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
+    Users
+  },
+  data(){
+    return {
+      users: [],
+      genderFilter: ['male','female']
+    }
+  },
+
+  computed: {
+    usersFiltered() {
+      return this.users.filter((user) => this.genderFilter.includes(user.gender))
+    },
+  },
+
+  methods: {
+    fetchUsers() {
+      axios
+        .get('https://randomuser.me/api/?results=20')
+        .then(response => {
+          this.users = response.data.results
+        })
+        .catch(error => {
+            console.log(error)
+            this.errored = true
+          })
+    }
+  },
+
+
 }
 </script>
 
