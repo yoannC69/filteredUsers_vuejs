@@ -24,33 +24,7 @@
 
   <Users :usersFiltered="usersFiltered" />
   
-        <table
-      id="tbl-users"
-      class="table table-hover"
-    >
-      <thead>
-        <tr>
-          <th>image</th>
-          <th>Nom</th>
-          <th>Email</th>
-          <th>Tel</th>
-          <th>Genre</th>
-        </tr>
-      </thead>
-      <tbody id="tbody-users" v-if="users">
-        <tr
-          v-for="user in usersFiltered"
-          :key="user.login.uuid"
-        >
-          <td><img :src="user.picture.thumbnail"></td>
-          <td>{{ user.name.first }} {{ user.name.last }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.phone }}</td>
-          <td>{{ user.gender }}</td>
-          <td />
-        </tr>
-      </tbody>
-    </table>
+        
 
 
 </template>
