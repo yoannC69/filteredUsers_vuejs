@@ -129,7 +129,7 @@ export default {
       axios
         .get('https://randomuser.me/api/?results=20')
         .then(response => {
-          this.users = response.data.results
+          this.users.push.apply(this.users,response.data.results)
         })
         .catch(error => {
             console.log(error)
