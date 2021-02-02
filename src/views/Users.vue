@@ -120,7 +120,8 @@ export default {
       })
     },
   },
-  created(){ this.fetchUsers()},
+
+  //created(){ this.fetchUsers()},
   
   methods: {
     fetchUsers() { 
