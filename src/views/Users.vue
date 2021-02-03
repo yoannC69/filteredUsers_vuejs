@@ -10,6 +10,7 @@
       <input
         v-model="genderFilter"
         type="checkbox"
+        :disabled="genderFilter.length<2 && genderFilter.includes('male')"
         value="male"
       >
       Hommes
@@ -18,6 +19,7 @@
       <input
         v-model="genderFilter"
         type="checkbox"
+        :disabled="genderFilter.length<2 && genderFilter.includes('female')"
         value="female"
       >
       Femmes
@@ -29,7 +31,13 @@
         type="text"
         placeholder="Rechercher"
       >
-    </label>  
+    </label> 
+    <button
+      class="btn btn-primary"
+      @click="resetFilters"
+    >
+      reset
+    </button> 
     <label>Trier par âge :          
     </label>
     <p v-if="sortDirection === ''">
@@ -43,10 +51,10 @@
     </p>
   </div>
   <p v-if="users.length">
-    il y a <strong>{{ searchedUsers.length }}</strong> utilisateurs
+    il y a <strong>{{ searchedUsers.length }}</strong> utilisateur{{ searchedUsers.length > 1 ? 's' : '' }} filtré{{ searchedUsers.length > 1 ? 's' : '' }} sur {{ users.length }} totaux
   </p>
   <p v-else>
-    il n'y a <strong>aucun</strong> utilisateur
+    il n'y a <strong>aucun</strong> utilisateur récupéré
   </p>
   <table
     v-if="users.length"
@@ -100,9 +108,9 @@ export default {
     return {
       users: [],
       errored: false,
-      genderFilter: ['male', 'female'],
-      search: '',
-      sortDirection: ''
+      genderFilter: (this.$route.query.gender || 'male,female').split(','),
+      search: this.$route.query.search || '',
+      sortDirection: this.$route.query.sort || ''
     }
   },
   computed: {
@@ -121,6 +129,17 @@ export default {
     },
   },
 
+  watch: {
+    genderFilter(){
+      this.updateQuery()
+    },
+    search(){
+      this.updateQuery()
+    },
+    sortDirection(){
+      this.updateQuery()
+    }
+  },
   //created(){ this.fetchUsers()},
   
   methods: {
@@ -146,6 +165,24 @@ export default {
         this.sortDirection = ''
       }
     },
+    updateQuery(){
+      const query= {}
+      if (this.genderFilter.length < 2){
+        query.gender = this.genderFilter.join('')
+      }
+      if (this.search){
+        query.search = this.search
+      }
+      if (this.sortDirection){
+        query.sort = this.sortDirection
+      }
+      this.$router.push({query})
+    },
+    resetFilters(){
+      this.genderFilter = ['male','female']
+      this.search = ''
+      this.sortDirection = ''
+    }
   },
   
 }
