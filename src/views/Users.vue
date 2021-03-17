@@ -87,12 +87,21 @@
         v-for="user in searchedUsers"
         :key="user.email"
       >
-        <td><img :src="user.picture.thumbnail"></td>
-        <td>{{ user.name.first }} {{ user.name.last }}</td>
+        <td>
+          <img
+            style="max-width: 100px"
+            :src="user.avatarUrl"
+          >
+        </td>
+        <td>
+          <router-link :to="{name : 'editUser', params: {id: user.id}}">
+            {{ user.firstName }} {{ user.lastName }}
+          </router-link>
+        </td>
         <td>{{ user.email }}</td>
         <td>{{ user.phone }}</td>
         <td>{{ user.gender }}</td>
-        <td>{{ user.dob.age }}</td>
+        <td>{{ user.age }}</td>
       </tr>
     </tbody>
   </table>
@@ -118,13 +127,13 @@ export default {
       return this.users
       .filter((user) => this.genderFilter.includes(user.gender))
       .filter((user) => {
-        return (user.name.first.toLowerCase().includes(this.search.toLowerCase())) ||
-        (user.name.last.toLowerCase().includes(this.search.toLowerCase()))
+        return (user.firstName.toLowerCase().includes(this.search.toLowerCase())) ||
+        (user.lastName.toLowerCase().includes(this.search.toLowerCase()))
       })
       .sort((a,b) => {
         if (!this.sortDirection) return 0;
         const  modifier = this.sortDirection === 'desc' ? -1 : 1;
-        return (a.dob.age - b.dob.age) * modifier;
+        return (a.age - b.age) * modifier;
       })
     },
   },
@@ -140,15 +149,14 @@ export default {
       this.updateQuery()
     }
   },
-  //created(){ this.fetchUsers()},
+  created(){ this.fetchUsers()},
   
   methods: {
     fetchUsers() { 
       axios
-        .get('https://randomuser.me/api/?results=20')
+        .get('http://localhost:6929/users')
         .then(response => {
-         this.users = [...this.users, ...response.data.results]
-         //this.users = this.users.concat(response.data.results)
+         this.users = [...this.users, ...response.data]
         })
         .catch(error => {
           console.error(error)

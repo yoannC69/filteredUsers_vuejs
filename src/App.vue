@@ -8,6 +8,9 @@
     </router-link> |
     <router-link to="/users">
       users
+    </router-link> |
+    <router-link to="/users/create">
+      Créer un utilisateur
     </router-link>
   </div>
   <router-view />
