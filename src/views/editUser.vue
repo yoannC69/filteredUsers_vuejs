@@ -108,12 +108,17 @@
             .get(`http://localhost:6929/users/${this.$route.params.id}`)
             .then(response => this.user = response.data)
             },
-            editUser(){
+            async editUser(){
               //console.log(this.user, 'a')
-              axios
+              const response = await axios
               .put(`http://localhost:6929/users/${this.$route.params.id}`, this.user)
-              .then(this.$toast.success(`Vous avez modifié l'utilisateur`),
-                response => this.user = response.data)
+              this.message = response.data.messageError
+              if(!this.message){
+                this.$toast.success(`Vous avez modifié l'utilisateur`),
+                response => this.user = response.data
+              } else{
+                this.$toast.error(this.message)
+              }
             },
             deleteUser(){
               axios
