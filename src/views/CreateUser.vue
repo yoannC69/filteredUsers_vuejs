@@ -61,9 +61,8 @@
         type="radio"
         name="genre"
         value="female"
-        checked
       >
-      <label for="gender">femme</label>
+      <label for="femme">femme</label>
     </div>
 
     <div>
@@ -74,7 +73,7 @@
         name="genre"
         value="male"
       >
-      <label for="gender">homme</label>
+      <label for="homme">homme</label>
     </div>
     
     <button
@@ -98,16 +97,23 @@
 
         data() {
             return {
-                user: {}
+                user: {}, message:''
             }
         },
 
         methods:{
-            createUser(){
+            async createUser(){
                 console.log(this.user, 'a')
-                axios
+                const response = await axios
                 .post('http://localhost:6929/users', this.user)
-                .then(response => console.log(response))
+                this.message = response.data.messageError
+                if(!this.message){
+                  this.$toast.success(`Vous avez créer l'utilisateur`),
+                  this.$router.push({ path : '/users' });
+                } else{
+                  this.$toast.error(this.message)
+                }
+                
             }
         }
     })

@@ -55,9 +55,8 @@
         type="radio"
         name="genre"
         value="female"
-        checked
       >
-      <label for="gender">femme</label>
+      <label for="femme">femme</label>
     </div>
 
     <div>
@@ -68,7 +67,7 @@
         name="genre"
         value="male"
       >
-      <label for="gender">homme</label>
+      <label for="homme">homme</label>
     </div>
     
     <button
@@ -77,6 +76,13 @@
       @click="editUser"
     >
       Enregistrer
+    </button>
+    <button
+      type="submit"
+      class="btn btn-primary"
+      @click="deleteUser"
+    >
+      supprimer l'utilisteur
     </button>
   </form>
 </template>
@@ -103,10 +109,17 @@
             .then(response => this.user = response.data)
             },
             editUser(){
-                //console.log(this.user, 'a')
-                axios
-                .put(`http://localhost:6929/users/${this.$route.params.id}`, this.user)
-                .then(response => this.user = response.data)
+              //console.log(this.user, 'a')
+              axios
+              .put(`http://localhost:6929/users/${this.$route.params.id}`, this.user)
+              .then(this.$toast.success(`Vous avez modifié l'utilisateur`),
+                response => this.user = response.data)
+            },
+            deleteUser(){
+              axios
+              .delete(`http://localhost:6929/users/${this.$route.params.id}`, this.user)
+              .then(this.$toast.success(`Vous avez supprimé l'utilisateur`),
+                this.$router.push({ path : '/users' }));
             }
         }
     })
