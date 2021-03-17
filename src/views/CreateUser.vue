@@ -7,8 +7,8 @@
       <label for="avatarUrl">Url photo</label>
       <input
         id="avatarUrl"
-        v-model="user.avatarUrl"
-        type="text"
+        name="photo"
+        type="file"
         class="form-control"
         placeholder="entrez l'url de votre photo"
       >
